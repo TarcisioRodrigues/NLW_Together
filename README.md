@@ -25,7 +25,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 ## 💻 Projeto
 
-O Letmeask é um criador de sala para perguntas .
+O Letmeask é um criador de sala para perguntas e respostas .
 
 ## 🚀 Como executar
 
