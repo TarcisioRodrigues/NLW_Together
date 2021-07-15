@@ -9,13 +9,14 @@ type User = {
 };
 type authContextType = {
   user: User | undefined;
-  signInWithGoogle: () => Promise<void>;
+  signInWithGoogle: () => void;
 };
 export const authContext = createContext({} as authContextType);
 type AuthContextProviderProps = {
   children: ReactNode;
 };
 export function AuthContextProvider(props: AuthContextProviderProps) {
+  const [user, setUser] = useState<User>();
   useEffect(() => {
     const unsuscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -34,22 +35,32 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
       unsuscribe();
     };
   }, []);
-  const [user, setUser] = useState<User>();
+
   async function signInWithGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const result = await auth.signInWithPopup(provider);
-    if (result.user) {
-      const { displayName, photoURL, uid } = result.user;
-      if (!displayName || !photoURL) {
-        throw new Error('Missing information from google account');
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const result = await auth.signInWithPopup(provider);
+      if (result.user) {
+        const { displayName, photoURL, uid } = result.user;
+        if (!displayName || !photoURL) {
+          throw new Error('Missing information from google account');
+        }
+        setUser({
+          id: uid,
+          name: displayName,
+          avatar: photoURL,
+        });
       }
-      setUser({
-        id: uid,
-        name: displayName,
-        avatar: photoURL,
-      });
+    } catch (err) {
+      console.error('entrou aqui==> ', err);
     }
+    //   const provider = new firebase.auth.GoogleAuthProvider();
+    //   auth
+    //     .signInWithPopup(provider)
+    //     .then((response) => console.log('response', response))
+    //     .catch((error) => console.log('erroo', error));
   }
+
   return (
     <authContext.Provider value={{ user, signInWithGoogle }}>
       {props.children}
