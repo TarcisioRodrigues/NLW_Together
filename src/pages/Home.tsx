@@ -24,16 +24,26 @@ export function Home() {
   }
   async function handleJoinRoom(event: FormEvent) {
     event.preventDefault();
+
     if (roomCode.trim() === '') {
       return;
     }
-    const roomRef = await database.ref(`/room/${roomCode}`).get();
+
+    const roomRef = await database.ref(`rooms/${roomCode}`).get();
+
     if (!roomRef.exists()) {
-      alert('Room does not exists');
+      alert('Room does not exists.');
       return;
     }
-    history.push(`/room/${roomCode}`);
+
+    if (roomRef.val().endedAt) {
+      alert('Room already closed.');
+      return;
+    }
+
+    history.push(`room/${roomCode}`);
   }
+
   return (
     <div id="page-auth">
       <aside>
@@ -57,7 +67,8 @@ export function Home() {
             <input
               type="text"
               placeholder="Digite o codigo da sala"
-              onChange={(event) => setRoomCode}
+              onChange={(event) => setRoomCode(event.target.value)}
+              value={roomCode}
             />
             <Button>Entra na sala</Button>
           </form>

@@ -14,15 +14,19 @@ export function NewRoom() {
   const [newRoom, setNewRoom] = useState('');
   async function handleCreateRoom(event: FormEvent) {
     event.preventDefault();
+
     if (newRoom.trim() === '') {
       return;
     }
+
     const roomRef = database.ref('rooms');
 
     const firebaseRoom = await roomRef.push({
       tittle: newRoom,
       authorId: user?.id,
     });
+    //  redirecionar o usuário para a sala criada
+    //  o key eh o id que foi inserido no banco de dados
     history.push(`/room/${firebaseRoom.key}`);
   }
   return (
