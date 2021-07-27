@@ -7,6 +7,20 @@
 &+.question{
   margin-top: 8px;
 }
+&.answered {
+  background: #e2e2e2;
+  color: #737380;
+  border-radius: 8px;
+}
+&.highlighted {
+  background: #f4f0ff;
+  border: 1px solid #835afd;
+  border-radius: 8px;
+
+  footer .user-info span {
+    color: #29292e;
+  }
+}
 
   p{
     color: #29292e;
@@ -32,6 +46,10 @@
       }
     }
     button{
+      >div{
+        display: flex;
+        gap: 16px;
+      }
       border: 0;
       background: transparent;
       cursor: pointer;

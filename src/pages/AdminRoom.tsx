@@ -2,6 +2,8 @@
 import { useHistory, useParams } from 'react-router-dom';
 import logoImg from '../assets/logo.svg';
 import deleteImg from '../assets/delete.svg';
+import checkImg from '../assets/check.svg';
+import answerImg from '../assets/answer.svg';
 import { Button } from '../components/Button';
 import { Question } from '../components/Question';
 import { RoomCode } from '../components/RoomCode';
@@ -34,6 +36,17 @@ export function AdminRoom() {
         .remove();
     }
   }
+  async function handleCheckQuestion(questionId: string) {
+    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      isAnswered: true,
+    });
+  }
+
+  async function handleHighlighQuestion(questionId: string) {
+    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      isHighLighted: true,
+    });
+  }
   return (
     <div id="page-room">
       <header>
@@ -64,7 +77,26 @@ export function AdminRoom() {
                 isAnswered={question.isAnswered}
                 isHighLighted={question.isHighLighted}
               >
-                <button type="button" onClick={() => handleDeleteQuestion}>
+                {!question.isAnswered && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleCheckQuestion(question.id)}
+                    >
+                      <img src={checkImg} alt="Checar pergunta" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleHighlighQuestion(question.id)}
+                    >
+                      <img src={answerImg} alt="Dar destaque a pergunta" />
+                    </button>
+                  </>
+                )}
+                <button
+                  type="button"
+                  onClick={() => handleDeleteQuestion(question.id)}
+                >
                   <img src={deleteImg} alt="Remover pergunta" />
                 </button>
               </Question>
